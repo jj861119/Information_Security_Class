@@ -8,8 +8,8 @@ n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(63): warning C4
 n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(67): warning C4018: '<': signed/unsigned 不相符
 n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(72): warning C4018: '<': signed/unsigned 不相符
 n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(95): warning C4018: '<': signed/unsigned 不相符
-n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(180): warning C4018: '<': signed/unsigned 不相符
-n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(188): warning C4018: '<': signed/unsigned 不相符
-n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(203): warning C4018: '<': signed/unsigned 不相符
-n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(210): warning C4018: '<': signed/unsigned 不相符
+n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(193): warning C4018: '<': signed/unsigned 不相符
+n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(201): warning C4018: '<': signed/unsigned 不相符
+n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(216): warning C4018: '<': signed/unsigned 不相符
+n:\github\information_security_class\encrypt\encrypt\encrypt.cpp(223): warning C4018: '<': signed/unsigned 不相符
   Encrypt.vcxproj -> N:\GitHub\Information_Security_Class\Encrypt\Debug\Encrypt.exe

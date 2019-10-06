@@ -164,10 +164,24 @@ string vernam(string key, string Plaintext)
 	{
 		Plaintext[i] -= 32;
 	}
+	//cout << Plaintext << "\n";
 	string newKey = key + Plaintext;
+	//cout << newKey << "\n";
+	//cout << (('D'-65)^('O'-65)) << "\n";
+
 	for (int i = 0; i < length; i++)
 	{
-		output += (char) ((((int)newKey[i]) ^ ((int)Plaintext[i]))+65);
+		//cout << (((int)newKey[i]) ^ ((int)Plaintext[i])) << "\n";
+		output += (char)((((int)newKey[i]-65) ^ ((int)Plaintext[i]-65)) + 65);
+		/*if ((((int)newKey[i]) ^ ((int)Plaintext[i])) <= 25 && (((int)newKey[i]) ^ ((int)Plaintext[i])) >= 0)
+		{
+			output += (char)((((int)newKey[i]) ^ ((int)Plaintext[i])) + 65);
+		}
+		else
+		{
+			output += (char)(((int)newKey[i]) ^ ((int)Plaintext[i]));
+		}*/
+		
 	}
 	return output;
 }
