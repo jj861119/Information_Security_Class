@@ -261,6 +261,6 @@ int main(int argc, char *argv[])
 	}
 
 	cout << output << "\n";
-	system("PAUSE");
+	//system("PAUSE");
 	return 0;
 }
