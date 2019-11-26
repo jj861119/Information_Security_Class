@@ -51,6 +51,32 @@ def encrypt_CBC(data: bytes, key):
     cipher=bytes().join([cipherBlock for cipherBlock in cipherBlocks])
     return cipher
 
+def encrypt_OPC(data: bytes, key1):
+    
+    aes = AES.new(key1, AES.MODE_ECB)
+
+    IV=os.urandom(16)
+    with open(f"IV",'wb') as file:
+        file.write(IV)
+
+    key2 = os.urandom(16)
+    with open(f"key2",'wb') as file:
+        file.write(key2)
+
+    blocks=[data[i:i+16]for i in range(0,len(data),16)]
+    cipherBlocks=[]
+    cipher=b''
+    O=key2
+    for n in range(0,len(blocks),1):
+        O=aes.encrypt(IV)
+        G=XOR(blocks[n],O)
+        IV=G
+        cipherBlocks.append(G+key2)
+        key2=O
+       
+    cipher=bytes().join([cipherBlock for cipherBlock in cipherBlocks])
+    return cipher
+
 
 # img = Image.open('./penguin.ppm')
 # width = img.width
@@ -79,8 +105,11 @@ with open(f"key",'wb') as file:
 
 if(mode=='ECB'):
     cipher = encrypt_ECB(data,random_key)
-if(mode=='CBC'):
+elif(mode=='CBC'):
     cipher = encrypt_CBC(data,random_key)
+elif(mode=='OPC'):
+    cipher = encrypt_OPC(data,random_key)
+
 
 img=Image.open(io.BytesIO(header+cipher[:length]))
 img.save(f'{filename}-{mode}.jpg')
