@@ -19,8 +19,20 @@ def square_and_multiply(H,x,n):
             y=(y*x)%n
     return y
 
-def witness(a,b):
-    print('test')
+def egcd(a, b):
+	if a == 0:
+		return (b, 0, 1)
+	else:
+		gcd, x, y = egcd(b % a, a)
+		return (gcd, y - (b//a) * x, x)
+
+def mod_inv(a,b):
+    gcd,x,y=egcd(a,b)
+    if(gcd==1):
+        return x
+    else:
+        return 0
+
 
 def miller_rabin_test(n,ite=20):
     if(n==2):
@@ -82,6 +94,7 @@ def GenerateKey(p,q):
 
 action = sys.argv[1]
 test = random.getrandbits(1024)
+print(egcd(7,40))
 #print(square_and_multiply(6,7,11))
 # print(test)
 # print(bin(test)[2:])
