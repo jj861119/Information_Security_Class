@@ -1,23 +1,22 @@
 import numpy
 import random
+from random import randrange
 import base64
 import sys
 import io
 import os
 import math
-
+sys.setrecursionlimit(100000)
 def square_and_multiply(H,x,n):
     H=bin(H)
     H=H[2:]
     y=x
-    # print(H)
-    # print(len(H))
-    # print(H[0])
     for i in range(1,len(H)):
         y=(y*y)%n
         if(H[i]=='1'):
             y=(y*x)%n
     return y
+
 
 def egcd(a, b):
 	if a == 0:
@@ -28,21 +27,17 @@ def egcd(a, b):
 
 def mod_inv(a,b):
     gcd,x,y=egcd(a,b)
-    if(gcd==1):
-        return x
-    else:
-        return 0
+    return x%b
 
-
-def miller_rabin_test(n,ite=20):
+def miller_rabin_test(n,ite=5):
     if(n==2):
         return True
-    if(not n & 1):
+    if(n%2==0):
         return False
     m=n-1
     k=0
     while m % 2==0:
-        m//=2
+        m=m//2
         k+=1
     for i in range(ite):
         a=random.randrange(2,n-2)
@@ -72,8 +67,9 @@ def init_1024():
             break
         p=random.getrandbits(1024)
 
+    not_prime=True
     q=random.getrandbits(1024)
-    while(not_prime or q==p):
+    while(not_prime):
         if(check_prime(q)):
             not_prime=False
             break
@@ -83,37 +79,77 @@ def init_1024():
 def GenerateKey(p,q):
     n=p*q
     phi_n=(p-1)*(q-1)
-    e=random.randrange(1,phi_n-1)
-    r=math.gcd(e,phi_n)
-    while(r!=1):
-        e=random.randrange(1,phi_n-1)
-        r=math.gcd(e,phi_n)
+    while(True):
+        e=random.randrange(1,phi_n)
+        if(math.gcd(e,phi_n)==1):
+            break
+    d=mod_inv(e,phi_n)
+    return n,e,d
 
-#def init_small():
+def RSA_encrypt(plaintext,n,e):
+    ciphertext = square_and_multiply(e, plaintext, n)
+    return ciphertext
 
+def RSA_decrypt(p,q,d,ciphertext):
+    Xp=ciphertext%p
+    Xq=ciphertext%q
+    Dp=d%(p-1)
+    Dq=d%(q-1)
+    Yp=square_and_multiply(Dp,Xp,p)
+    Yq=square_and_multiply(Dq,Xq,q)
+    Cp=mod_inv(p,q)
+    t=Cp
+    u=((Yq-Yp)*t)%q
+    plaintext = Yp+p*u
+    return plaintext
+
+
+def WriteFile(filename,content):
+    with open(f"{filename}",'w') as file:
+        file.write(str(content))
+
+def ReadFile(filename):
+    with open(f"{filename}",'r') as file:
+        return file.read()
 
 action = sys.argv[1]
-test = random.getrandbits(1024)
-print(egcd(7,40))
-#print(square_and_multiply(6,7,11))
-# print(test)
-# print(bin(test)[2:])
-#random_key = os.urandom(16)
-    
-# if(check_prime(9973)):
-#     print('true')
-# else:
-#     print('false')
+
 
 if(action=='init'):
-    if(sys.argv[2]=='1024'):
-        mode=sys.argv[2]
-        p,q=init_1024()
-
-    if(sys.argv[2]=='small'):
-        mode=sys.argv[2]
-        #init_small()      
-
+    print("init")
+    p,q=init_1024()
+    n,e,d=GenerateKey(p,q)
+    WriteFile("p",p)
+    WriteFile("q",q)
+    WriteFile("n",n)
+    WriteFile("e",e)
+    WriteFile("d",d)
+    print('p:',p)
+    print('q:',q)
+    print('n:',n)
+    print('e:',e)
+    print('d:',d)
+if(action=='encrypt'):
+    print("encrypt")
+    plaintext = int.from_bytes(bytes(sys.argv[2],encoding='ascii'),byteorder='big')
+    plaintext_length=len(sys.argv[2])
+    n=int(ReadFile("n"))
+    e=int(ReadFile("e"))
+    ciphertext = RSA_encrypt(plaintext, n, e)
+    WriteFile("ciphertext",ciphertext)
+    WriteFile("plaintext_length",plaintext_length)
+    print('ciphertext:',ciphertext)
+if(action=='decrypt'):
+    print("decrypt")
+    ciphertext= int(ReadFile("ciphertext"))
+    d=int(ReadFile("d"))
+    p=int(ReadFile("p"))
+    q=int(ReadFile("q"))
+    plaintext_length=int(ReadFile("plaintext_length"))
+    plaintext = RSA_decrypt(p,q,d,ciphertext)
+    plaintext=plaintext.to_bytes(plaintext_length,byteorder='big')
+    plaintext=str(plaintext,encoding='ascii')
+    print('plaintext:',plaintext)
 
 
 
