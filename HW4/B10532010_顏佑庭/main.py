@@ -17,7 +17,6 @@ def square_and_multiply(H,x,n):
             y=(y*x)%n
     return y
 
-
 def egcd(a, b):
 	if a == 0:
 		return (b, 0, 1)
