@@ -96,7 +96,8 @@ def Sign(message,p,q,alpha,beta,d):
     kE=random.randrange(1,q-1)
     r=SquareAndMultiply(kE,alpha,p) % q
     sha1 = int(hashlib.sha1(message.encode('utf-8')).hexdigest(),16)
-    s=((sha1+d*r)//kE)%q
+    kE_inverse=mod_inv(kE,q)
+    s=((sha1+d*r)*kE_inverse)%q
     return r,s
 
 def Verify():
@@ -107,6 +108,11 @@ action = sys.argv[1]
 if(action=='-keygen'):
     bits=sys.argv[2]
     p,q,alpha,beta,d=Keygen()
+    print("p:   ",p)
+    print("q:   ",q)
+    print("alpha:   ",alpha)
+    print("beta:   ",beta)
+    print("d:   ",d)
     WriteFile("p",p)
     WriteFile("q",q)
     WriteFile("alpha",alpha)
@@ -120,6 +126,8 @@ if(action=='-sign'):
     beta=int(ReadFile("beta"))
     d=int(ReadFile("d"))
     r,s = Sign(message,p,q,alpha,beta,d)
+    print("r:   ",r)
+    print("s:   ",s)
     WriteFile("r",r)
     WriteFile("s",s)
 if(action=='-verify'):
