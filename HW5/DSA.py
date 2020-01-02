@@ -79,6 +79,8 @@ def Keygen():
     print("keygen")
     q=GenPrime(160)
     p=(q*random.getrandbits(864))+1
+    while(not CheckPrime(p)):
+        p=(q*random.getrandbits(864))+1
     
     h=random.randrange(2,p-2)
     while(True):
