@@ -102,8 +102,20 @@ def Sign(message,p,q,alpha,beta,d):
     s=((sha1+d*r)*kE_inverse)%q
     return r,s
 
-def Verify():
+def Verify(message,r,s,alpha,beta,p,q):
     print("verify")
+    w = mod_inv(s,q)
+    sha1 = int(hashlib.sha1(message.encode('utf-8')).hexdigest(),16)
+
+    u1 = (w * sha1) % q
+    u2 = (w * r) % q
+
+    v = ((SquareAndMultiply(u1,alpha,p)*SquareAndMultiply(u2,beta,p)) % p) % q
+
+    if v==r:
+        print("Valid")
+    else:
+        print("Invalid")
 
 action = sys.argv[1]
 
@@ -134,6 +146,14 @@ if(action=='-sign'):
     WriteFile("s",s)
 if(action=='-verify'):
     message=sys.argv[2]
+    message=sys.argv[2]
+    p=int(ReadFile("p"))
+    q=int(ReadFile("q"))
+    alpha=int(ReadFile("alpha"))
+    beta=int(ReadFile("beta"))
+    r=int(ReadFile("r"))
+    s=int(ReadFile("s"))
+    Verify(message,r,s,alpha,beta,p,q)
 
 
 
